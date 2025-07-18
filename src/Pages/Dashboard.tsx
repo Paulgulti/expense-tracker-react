@@ -1,5 +1,6 @@
 import AllTransactions from '@/Components/AllTransactions'
 import Header from '@/Components/Header'
+import TotalCard from '@/Components/TotalCard'
 import { Button } from '@/Components/ui/button'
 import { Input } from '@/Components/ui/input'
 import { Popover, PopoverContent, PopoverTrigger } from '@/Components/ui/popover'
@@ -9,7 +10,7 @@ import { toast } from 'react-toastify'
 export type TransactionDetail = {
   id: string,
   description: string,
-  amount: number | undefined,
+  amount: number ,
   status: string,
   traDate: string
 }
@@ -63,10 +64,11 @@ const Dashboard = () => {
       <div className='flex flex-col md:flex-row justify-center md:my-10 my-5 gap-4 px-2 md:px-0'>
         <div className='hidden md:block'>
           <AllTransactions transactionInfo={transactionInfo} removeTransaction={removeTransaction} />
+          <TotalCard transactionInfo={transactionInfo}/>
         </div>
         <Popover>
           <PopoverTrigger asChild className='w-fit'>
-            <Button variant="outline">Create transaction</Button>
+            <Button className='cursor-pointer' variant="outline">Create transaction</Button>
           </PopoverTrigger>
           <PopoverContent className='w-80'>
             <div>
@@ -136,8 +138,12 @@ const Dashboard = () => {
           </PopoverContent>
         </Popover>
         <div className='md:hidden'>
+          <TotalCard transactionInfo={transactionInfo}/>
+        </div>
+        <div className='md:hidden'>
           <AllTransactions transactionInfo={transactionInfo} removeTransaction={removeTransaction} />
         </div>
+
       </div>
     </div>
   )

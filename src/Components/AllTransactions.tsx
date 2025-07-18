@@ -2,6 +2,7 @@ import type { TransactionDetail } from '@/Pages/Dashboard'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './ui/table'
 import { priceFormatter } from '@/lib/utils'
 import { ScrollArea } from './ui/scroll-area'
+import { useState } from 'react'
 
 
 const AllTransactions = (
@@ -9,23 +10,44 @@ const AllTransactions = (
         { transactionInfo: TransactionDetail[], removeTransaction: (id: string) => void }
 ) => {
 
+    const [statusFilter, setStatusFilter] = useState<string>('all');
+
+    const filteredTransactions = statusFilter === 'all' ? (
+        transactionInfo
+    ) : (
+        transactionInfo.filter(tran => tran.status === statusFilter)
+    )
+
     return (
         <div>
-            {transactionInfo && transactionInfo.length > 0 ? (
-                <ScrollArea className='h-72 max-w-[500px]  mx-auto  rounded-md'>
+            <div className="mb-2 flex items-center gap-2 ">
+                <label htmlFor="status-filter">Filter by status:</label>
+                <select
+                    id="status-filter"
+                    value={statusFilter}
+                    onChange={e => setStatusFilter(e.target.value)}
+                    className="border rounded px-2 py-1 bg-slate-900 text-white"
+                >
+                    <option value="all">All</option>
+                    <option value="income">Income</option>
+                    <option value="expense">Expense</option>
+                </select>
+            </div>
+            {filteredTransactions && filteredTransactions.length > 0 ? (
+                <ScrollArea className='max-h-72 max-w-[500px]  mx-auto  rounded-md'>
                     <Table className='border'>
                         <TableHeader>
                             <TableRow>
                                 <TableHead className='w-[80px]'>Date</TableHead>
                                 <TableHead className=' '>
-                                    status
+                                    Status
                                 </TableHead>
                                 <TableHead className='hidden xs:table-cell'>Description</TableHead>
                                 <TableHead className="text-right">Amount</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {transactionInfo.map(tran =>
+                            {filteredTransactions.map(tran =>
                                 <TableRow key={tran.id}>
                                     <TableCell className="font-medium w-[80px]">{tran.traDate}</TableCell>
                                     <TableCell >{tran.status}</TableCell>
